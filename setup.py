@@ -3,7 +3,7 @@ from setuptools.command.install import install
 import os
 
 # To test locally: python setup.py install
-# To upload to pypi: python setup.py sdist upload
+# To upload to pypi: python setup.py sdist bdist_wheel upload
 class OverrideInstall(install):
   def run(self):
     install.run(self)  # install everything as per usual
@@ -39,7 +39,7 @@ setup(
     'Pillow',
     'future',
     'opencv-python',
-    'dlib',
+    'dlib'
   ],
   cmdclass={'install': OverrideInstall},
   entry_points={'console_scripts': [

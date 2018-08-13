@@ -4,6 +4,7 @@ Locate face points
 
 import cv2
 import numpy as np
+
 import subprocess
 import sys
 import os.path as path
@@ -27,9 +28,9 @@ SUPPORTED_PLATFORMS = {
   'darwin': 'osx'
 }
 
+
 def boundary_points(points, width_percent=0.1, height_percent=0.1):
   """ Produce additional boundary points
-
   :param points: *m* x 2 array of x,y points
   :param width_percent: [-1, 1] percentage of width to taper inwards. Negative for opposite direction
   :param height_percent: [-1, 1] percentage of height to taper downwards. Negative for opposite direction
@@ -68,6 +69,8 @@ def face_points_dlib(imgpath, add_boundary_points=True):
           boundary_points(points, 0.15, -0.08),
           boundary_points(points, 0.33, -0.12)])
 
+  points = points.astype(np.int32)
+  if len(points) == 0:
     return points
   except Exception as e:
     print(e)
@@ -81,6 +84,11 @@ def face_points(imgpath, add_boundary_points=True):
   :returns: Array of x,y face points. Empty array if no face found
   """
   points = face_points_dlib(imgpath, add_boundary_points)
+  return points
+
+  if add_boundary_points:
+    return np.vstack([points, boundary_points(points)])
+
   return points
 
 def average_points(point_set):
