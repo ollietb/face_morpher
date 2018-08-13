@@ -112,9 +112,7 @@ def face_points(imgpath, add_boundary_points=True):
   :param add_boundary_points: bool to add additional boundary points
   :returns: Array of x,y face points. Empty array if no face found
   """
-  points = face_points_stasm(imgpath, add_boundary_points)
-  if len(points) == 0:
-    points = face_points_dlib(imgpath, add_boundary_points)
+  points = face_points_dlib(imgpath, add_boundary_points)
   return points
 
 def average_points(point_set):

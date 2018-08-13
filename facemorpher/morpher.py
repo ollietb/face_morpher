@@ -83,12 +83,18 @@ def alpha_image(img, points):
   mask = blender.mask_from_points(img.shape[:2], points)
   return np.dstack((img, mask))
 
+def img_over_bg(img, bg):
+  assert img.shape[-1] == 4
+  alpham = img[..., 3] > 0
+  bg[alpham] = img[..., :3][alpham]
+
 def morph(src_img, src_points, dest_img, dest_points,
           video, width=500, height=600, num_frames=20, fps=10,
           out_frames=None, out_video=None, alpha=False, plot=False):
   """
   Create a morph sequence from source to destination image
 
+  :param out_video:
   :param src_img: ndarray source image
   :param src_img: source image array of x,y face points
   :param dest_img: ndarray destination image
@@ -110,8 +116,10 @@ def morph(src_img, src_points, dest_img, dest_points,
     end_face = warper.warp_image(dest_img, dest_points, points, size)
     average_face = blender.weighted_average(src_face, end_face, percent)
     average_face = alpha_image(average_face, points) if alpha else average_face
-    plt.plot_one(average_face, 'save')
-    video.write(average_face)
+    average_bg = blender.weighted_average(src_img, dest_img, percent)
+    img_over_bg(average_face, average_bg)
+    plt.plot_one(average_bg, 'save')
+    video.write(average_bg)
 
   plt.plot_one(dest_img)
   video.write(dest_img, stall_frames)
