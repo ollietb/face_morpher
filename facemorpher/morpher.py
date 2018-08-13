@@ -53,7 +53,7 @@ def verify_args(args):
 
 def load_image_points(path, size):
   img = cv2.imread(path)
-  points = locator.face_points(img)
+  points = locator.face_points(path)
 
   if len(points) == 0:
     print('No face in %s' % path)

@@ -7,11 +7,6 @@ import os
 class OverrideInstall(install):
   def run(self):
     install.run(self)  # install everything as per usual
-    for filepath in self.get_outputs():
-      if 'bin/stasm_util' in filepath:
-        # make binaries executable
-        os.chmod(filepath, 0o755)
-
 
 setup(
   name='facemorpher',
@@ -25,11 +20,7 @@ setup(
   packages=find_packages(),
   package_data={'facemorpher': [
     'data/*.xml',
-    'data/shape_predictor_68_face_landmarks.dat',
-    'bin/stasm_util_osx_cv3.2',
-    'bin/stasm_util_osx_cv3.4',
-    'bin/stasm_util_linux_cv3.2',
-    'bin/stasm_util_linux_cv3.4'
+    'data/shape_predictor_68_face_landmarks.dat'
   ]},
   install_requires=[
     'docopt',
