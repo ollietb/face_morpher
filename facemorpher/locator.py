@@ -41,38 +41,6 @@ def boundary_points(points, width_percent=0.1, height_percent=0.1):
   return [[x+spacerw, y+spacerh],
           [x+w-spacerw, y+spacerh]]
 
-def face_points_stasm(imgpath, add_boundary_points=True):
-  """ Locates 77 face points using stasm (http://www.milbo.users.sonic.net/stasm)
-
-  :param imgpath: an image path to extract the 77 face points
-  :param add_boundary_points: bool to add additional boundary points
-  :returns: Array of x,y face points. Empty array if no face found
-  """
-  stasm_platform = SUPPORTED_PLATFORMS.get(sys.platform)
-  cv_major = cvver.major()
-  stasm_path = path.join(
-    BIN_DIR,
-    'stasm_util_{0}_cv{1}'.format(stasm_platform, cv_major)
-  )
-
-  if not path.exists(stasm_path) and not dlib_detector:
-    print(stasm_platform + ' with openCV' + cv_major + ' of stasm_util is currently not supported.')
-    print('You can try building `stasm_util_{0}_cv{1}` and add to `bin`'.format(
-      stasm_platform, cv_major))
-    sys.exit()
-
-  command = [stasm_path, '-f', DATA_DIR, imgpath]
-  s = subprocess.check_output(command, universal_newlines=True)
-  if s.startswith('No face found'):
-    return []
-  else:
-    points = np.array([pair.split(' ') for pair in s.rstrip().split('\n')],
-                      np.int32)
-    if add_boundary_points:
-      points = np.vstack([points, boundary_points(points)])
-
-    return points
-
 def face_points_dlib(imgpath, add_boundary_points=True):
   """ Locates 68 face points using dlib (http://dlib.net)
 
@@ -106,7 +74,7 @@ def face_points_dlib(imgpath, add_boundary_points=True):
     return []
 
 def face_points(imgpath, add_boundary_points=True):
-  """ High-level function to detect face points using stasm then dlib
+  """ High-level function to detect face points using dlib
 
   :param imgpath: an image path to extract face points
   :param add_boundary_points: bool to add additional boundary points
