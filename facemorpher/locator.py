@@ -63,7 +63,6 @@ def face_points_dlib(imgpath, add_boundary_points=True):
           boundary_points(points, 0.13, -0.05),
           boundary_points(points, 0.15, -0.08),
           boundary_points(points, 0.33, -0.12)])
-    print(points)
     return points
   except Exception as e:
     print(e)
