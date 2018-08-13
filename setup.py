@@ -15,7 +15,7 @@ class OverrideInstall(install):
 
 setup(
   name='facemorpher',
-  version='5.0.0',
+  version='3.4.0b0',
   author='Alyssa Quek',
   author_email='alyssaquek@gmail.com',
   description=('Warp, morph and average human faces!'),
@@ -23,12 +23,23 @@ setup(
   url='https://github.com/alyssaq/face_morpher',
   license='MIT',
   packages=find_packages(),
+  package_data={'facemorpher': [
+    'data/*.xml',
+    'data/shape_predictor_68_face_landmarks.dat',
+    'bin/stasm_util_osx_cv3.2',
+    'bin/stasm_util_osx_cv3.4',
+    'bin/stasm_util_linux_cv3.2',
+    'bin/stasm_util_linux_cv3.4'
+  ]},
   install_requires=[
     'docopt',
     'numpy',
     'scipy',
     'matplotlib',
-    'stasm'
+    'Pillow',
+    'future',
+    'opencv-python',
+    'dlib'
   ],
   cmdclass={'install': OverrideInstall},
   entry_points={'console_scripts': [

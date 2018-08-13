@@ -2,4 +2,7 @@ numpy
 scipy
 matplotlib
 docopt
-stasm
+Pillow
+future
+opencv-python
+dlib

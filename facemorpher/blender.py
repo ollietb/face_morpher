@@ -11,6 +11,9 @@ def mask_from_points(size, points):
   cv2.fillConvexPoly(mask, cv2.convexHull(points), 255)
   mask = cv2.erode(mask, kernel)
 
+  blur_radius = 10
+  mask = cv2.blur(mask, (blur_radius, blur_radius))
+
   return mask
 
 def apply_mask(img, mask):
