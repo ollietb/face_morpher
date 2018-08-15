@@ -24,7 +24,7 @@ SUPPORTED_PLATFORMS = {
   'darwin': 'osx'
 }
 
-def boundary_points(points, width_percent=0.1, height_percent=0.1):
+def boundary_points(points, width_percent=0.3, height_percent=0.3):
   """ Produce additional boundary points
   :param points: *m* x 2 array of x,y points
   :param width_percent: [-1, 1] percentage of width to taper inwards. Negative for opposite direction

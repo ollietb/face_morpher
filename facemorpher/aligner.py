@@ -36,7 +36,7 @@ def roi_coordinates(rect, size, scale):
   roi_y, border_y = positive_cap(roi_y)
   return roi_x, roi_y, border_x, border_y
 
-def scaling_factor(rect, size):
+def scaling_factor(rect, size, zoom):
   """ Calculate the scaling factor for the current image to be
       resized to the new dimensions
 
@@ -55,7 +55,7 @@ def scaling_factor(rect, size):
   else:
     new_rectw = 0.8 * new_width
     scale = new_rectw / rect_w
-  return scale
+  return scale * zoom
 
 def resize_image(img, scale):
   """ Resize image with the provided scaling factor
@@ -69,7 +69,7 @@ def resize_image(img, scale):
 
   return cv2.resize(img, (new_scaled_width, new_scaled_height))
 
-def resize_align(img, points, size):
+def resize_align(img, points, size, zoom):
   """ Resize image and associated points, align face to the center
     and crop to the desired size
 
@@ -81,7 +81,7 @@ def resize_align(img, points, size):
 
   # Resize image based on bounding rectangle
   rect = cv2.boundingRect(np.array([points], np.int32))
-  scale = scaling_factor(rect, size)
+  scale = scaling_factor(rect, size, zoom)
   img = resize_image(img, scale)
 
   # Align bounding rect to center

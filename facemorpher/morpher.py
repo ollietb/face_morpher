@@ -9,7 +9,7 @@
               [--width=<width>] [--height=<height>]
               [--num=<num_frames>] [--fps=<frames_per_second>]
               [--out_frames=<folder>] [--out_video=<filename>]
-              [--alpha] [--plot]
+              [--alpha] [--plot] [--zoom=<zoom>]
 
   Options:
     -h, --help              Show this screen.
@@ -24,6 +24,7 @@
     --out_video=<filename>  Filename to save a video
     --alpha                 Flag to save transparent background [default: False]
     --plot                  Flag to plot images [default: False]
+    --zoom=<zoom>           Zoom [default: 1]
     --version               Show version.
 """
 from docopt import docopt
@@ -51,7 +52,7 @@ def verify_args(args):
       print('--images=%s is not a valid directory' % args['--images'])
       exit(1)
 
-def load_image_points(path, size):
+def load_image_points(path, size, zoom):
   img = cv2.imread(path)
   points = locator.face_points(path)
 
@@ -59,11 +60,11 @@ def load_image_points(path, size):
     print('No face in %s' % path)
     return None, None
   else:
-    return aligner.resize_align(img, points, size)
+    return aligner.resize_align(img, points, size, zoom)
 
-def load_valid_image_points(imgpaths, size):
+def load_valid_image_points(imgpaths, size, zoom):
   for path in imgpaths:
-    img, points = load_image_points(path, size)
+    img, points = load_image_points(path, size, zoom)
     if img is not None:
       print(path)
       yield (img, points)
@@ -126,14 +127,14 @@ def morph(src_img, src_points, dest_img, dest_points,
   plt.show()
 
 def morpher(imgpaths, width=500, height=600, num_frames=20, fps=10,
-            out_frames=None, out_video=None, alpha=False, plot=False):
+            out_frames=None, out_video=None, alpha=False, plot=False, zoom=1):
   """
   Create a morph sequence from multiple images in imgpaths
 
   :param imgpaths: array or generator of image paths
   """
   video = videoer.Video(out_video, fps, width, height)
-  images_points_gen = load_valid_image_points(imgpaths, (height, width))
+  images_points_gen = load_valid_image_points(imgpaths, (height, width), zoom)
   src_img, src_points = next(images_points_gen)
   for dest_img, dest_points in images_points_gen:
     morph(src_img, src_points, dest_img, dest_points, video,
@@ -149,7 +150,7 @@ def main():
           int(args['--width']), int(args['--height']),
           int(args['--num']), int(args['--fps']),
           args['--out_frames'], args['--out_video'],
-          args['--alpha'], args['--plot'])
+          args['--alpha'], args['--plot'], float(args['--zoom']))
 
 
 if __name__ == "__main__":
